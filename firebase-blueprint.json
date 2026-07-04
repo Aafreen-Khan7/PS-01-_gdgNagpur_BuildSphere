@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "Patient": {
+      "title": "Patient",
+      "description": "Patient basic profile metadata",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "name": { "type": "string" },
+        "age": { "type": "integer" },
+        "doctor": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "name", "age", "doctor", "createdAt"]
+    },
+    "Discharge": {
+      "title": "Discharge",
+      "description": "AI-generated structured discharge plan and medicine instructions",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "rawInput": { "type": "string" },
+        "aiSummary": { "type": "string" },
+        "medicines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "dose": { "type": "string" },
+              "timing": { "type": "string" }
+            },
+            "required": ["name", "dose", "timing"]
+          }
+        },
+        "diet": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "warnings": {
+          "type": "object",
+          "properties": {
+            "red": { "type": "array", "items": { "type": "string" } },
+            "yellow": { "type": "array", "items": { "type": "string" } },
+            "green": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["red", "yellow", "green"]
+        },
+        "followUp": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "patientId",
+        "rawInput",
+        "aiSummary",
+        "medicines",
+        "diet",
+        "warnings",
+        "followUp",
+        "createdAt"
+      ]
+    },
+    "AccessLink": {
+      "title": "AccessLink",
+      "description": "Public QR/link mapping for secure dynamic route resolution",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "qrToken": { "type": "string" },
+        "publicURL": { "type": "string" }
+      },
+      "required": ["patientId", "qrToken", "publicURL"]
+    }
+  },
+  "firestore": {
+    "/patients/{patientId}": {
+      "schema": "Patient",
+      "description": "Hospital patient demographic and identification records"
+    },
+    "/discharges/{dischargeId}": {
+      "schema": "Discharge",
+      "description": "Detailed clinical discharge summaries and structured care plans"
+    },
+    "/accessLinks/{qrToken}": {
+      "schema": "AccessLink",
+      "description": "Access mappings associating secure unique tokens with patient documents"
+    }
+  }
+}
